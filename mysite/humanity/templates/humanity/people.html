@@ -1,0 +1,54 @@
+{% extends "humanity/base.html" %}
+
+{% block content %}
+    <div>
+        <a href="{% url 'add_person' %}"><button>Add Person</button></a> 
+        <a href="{% url 'bulk_add_people' %}"><button>Bulk Load</button></a> 
+    </div>
+
+    <div>
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
+    </div>
+
+    <table id="myTable">
+        <tr>    
+            <th>&nbsp;</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Region</th>
+        </tr>        
+        {% for person in people %}
+            <tr>
+                <td><a href="{% url 'person' person.id %}"><button>Open</button></a></td>
+                <td>{{ person.first_name }} {{ person.last_name }}</td>
+                <td>{{ person.email }}</td>
+                <td>{{ person.region }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <script>
+        function myFunction() {
+          // Declare variables
+          var input, filter, table, tr, td, i, txtValue;
+          input = document.getElementById("myInput");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("myTable");
+          tr = table.getElementsByTagName("tr");
+        
+          // Loop through all table rows, and hide those who don't match the search query
+          for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
+            if (td) {
+              txtValue = td.textContent || td.innerText;
+              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+              } else {
+                tr[i].style.display = "none";
+              }
+            }
+          }
+        }
+        </script>
+
+{% endblock content %}

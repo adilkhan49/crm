@@ -1,0 +1,20 @@
+{% extends "humanity/base.html" %}
+
+{% block content %}
+    <a href="{% url 'add_call' %}"><button>Add Call</button></a> 
+    <table>
+        <tr>    
+            <th>Receiver</th>
+            <th>Time</th>
+            <th>Caller</th>
+        </tr>        
+        {% for call in calls %}
+            <tr>
+                <td>{{ call.receiver }}</td>
+                <td>{{ call.call_time }}</td>
+                <td>{{ call.caller }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock content %}

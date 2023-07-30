@@ -1,0 +1,55 @@
+{% extends "humanity/base.html" %}
+
+{% block content %}
+    <a href="{% url 'event' event.id %}"><button>Back to Event</button></a>
+    <a href="{% url 'add_attendee' event.id %}"><button>Invite</button></a>
+
+    <table>
+        <tr>    
+            <th>&nbsp;</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Region</th>
+            <th>Invited</th>
+            <th>Confirmed</th>
+            <th>Attended</th>
+            <th>Called</th>
+        </tr>        
+        {% for a in event.invited %}
+            <tr>
+                <td>
+                    <a href="{% url 'person' a.person.id %}"><button>Open</button></a>
+                    <a href="{% url 'call_person' a.person.id %}"><button>Call</button></a>
+                    <a href="{% url 'delete_event_attendee' a.event_id a.id %}"><button>Delete</button></a>
+                </td>
+                <td>{{ a.person.first_name }}</td>
+                <td>{{ a.person.last_name }}</td>
+                <td>{{ a.person.email }}</td>
+                <td>{{ a.person.region }}</td>
+                <td>
+                    <form action = "{% url 'edit_event_attendee' a.event_id a.id %}" method="post">{% csrf_token %}
+                        <input name = 'invited' type="hidden" value = false onchange="this.form.submit()" {% if a.invited %} checked{% endif %}>
+                        <input name = 'invited' type="checkbox" value = true onchange="this.form.submit()" {% if a.invited %} checked{% endif %}>
+                    </form>
+                </td>
+                <td>
+                    <form action = "{% url 'edit_event_attendee' a.event_id a.id %}" method="post">{% csrf_token %}
+                        <input name = 'confirmed' type="hidden" value = false onchange="this.form.submit()" {% if a.confirmed %} checked{% endif %}>
+                        <input name = 'confirmed' type="checkbox" value = true onchange="this.form.submit()" {% if a.confirmed %} checked{% endif %}>
+                    </form>
+                </td>
+                <td>
+                    <form action = "{% url 'edit_event_attendee' a.event_id a.id %}" method="post">{% csrf_token %}
+                        <input name = 'attended' type="hidden" value = false onchange="this.form.submit()" {% if a.attended %} checked{% endif %}>
+                        <input name = 'attended' type="checkbox" value = true onchange="this.form.submit()" {% if a.attended %} checked{% endif %}>
+                    </form>
+                </td>
+                <td>
+                    {% if a.person.is_called %} Yes {% else %} No {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock content %}

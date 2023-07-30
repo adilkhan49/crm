@@ -1,0 +1,28 @@
+{% extends "humanity/base.html" %}
+
+{% block content %}
+    <a href="{% url 'add_event' %}"><button>Add Event</button></a>
+    <table>
+        <tr>    
+            <th>&nbsp;</th>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Organiser</th>
+            <th>Location</th>
+            <th># Invited</th>
+            <th># Attended</th>
+        </tr>        
+        {% for event in events %}
+            <tr>
+                <td><a href="{% url 'event' event.id %}"><button>Open</button></a></td>
+                <td>{{ event.start_date }}</td>
+                <td>{{ event.event_type }}</td>
+                <td>{{ event.organiser }}</td>
+                <td>{{ event.location }}</td>
+                <td>{{ event.num_invited }}</td>
+                <td>{{ event.num_attended }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock content %}
