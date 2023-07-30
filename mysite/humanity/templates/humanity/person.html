@@ -1,0 +1,57 @@
+{% extends "humanity/base.html" %}
+
+{% block content %}
+    <h2> 
+        {{ person.last_name }}, {{ person.first_name }}
+    </h2>
+    <a href="{% url 'edit_person' person.id %}"><button>Edit</button></a>
+    <a href="{% url 'call_person' person.id %}"><button>Call</button></a>
+    <table>
+        <tr>
+            <th>ID</th>
+            <td>{{ person.id }}</td>
+        </tr>                <tr>
+            <th>First Name</th>
+            <td>{{ person.first_name }}</td>
+        </tr>
+        <tr>
+            <th>Last Name</th>
+            <td>{{ person.last_name }}</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>{{ person.email }}</td>
+        </tr>
+        <tr>
+            <th>Phone Number</th>
+            <td>{{ person.phone_number }}</td>
+        </tr>
+        <tr>
+            <th>Region</th>
+            <td>{{ person.region }}</td>
+        </tr>
+        <tr>
+            <th>Location</th>
+            <td>{{ person.location }}</td>
+        </tr>
+        <tr>
+            <th>Events Attended</th>
+            <td>{{ person.num_events_attended }}</td>
+        </tr>
+        <tr>
+            <th>Calls Received</th>
+            <td>{{ person.num_calls }}</td>
+        </tr>
+        </tr>
+        <tr>
+            <th>Created Date</th>
+            <td>{{ person.created_at }}</td>
+        </tr>
+        <tr>
+            <th>Last Modified</th>
+            <td>{{ person.updated_at }}</td>
+        </tr>
+    </table>
+    <a href="{% url 'delete_person' person.id %}"><button>Delete</button></a>
+
+{% endblock content %}

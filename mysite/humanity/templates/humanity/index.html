@@ -1,0 +1,27 @@
+{% extends "humanity/base.html" %}
+
+{% block content %}
+<p>Welcome to the Humanity Project.</p>
+<p>This website is currently under development.</p>
+
+
+<table style="width:25%;">
+    <tr>
+        <th>Contacts</th>
+        <td>{{ num_people }}</td>
+    </tr>
+    <tr>
+        <th>Events</th>
+        <td>{{ num_events }}</td>
+    </tr>
+</table>
+</p>
+
+Capabilites:
+<ul>
+    <li>Add Contacts</li>
+    <li>Create Events</li>
+    <li>Invite people events</li>
+    <li>Follow up</li>
+</ul>
+{% endblock content %}

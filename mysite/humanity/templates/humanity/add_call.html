@@ -1,0 +1,22 @@
+{% extends "humanity/base.html" %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    <table>
+        {% for field in form %}
+            <div class="row">
+                <div class="column">
+                    {{ field.label_tag }}
+                </div>
+                <div class="column">
+                    {{ field }}
+                </div>
+            </div>
+        {% endfor %}
+    <input type="submit" value="Submit">
+    </table>
+</form> 
+
+{% endblock content %}
+
