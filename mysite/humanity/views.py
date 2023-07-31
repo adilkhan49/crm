@@ -180,7 +180,7 @@ def call_person(request,person_id):
             print('redirect')
             return HttpResponseRedirect(reverse('calls'))
     else:
-        form = CallForm(initial={'receiver':person_id})
+        form = CallForm(initial={'receiver':person_id,'call_time': localtime()})
     return render(request, "humanity/add_call.html", {"form": form})
 
 def call(request,call_id):
