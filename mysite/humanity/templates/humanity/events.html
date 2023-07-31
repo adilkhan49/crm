@@ -21,7 +21,13 @@
                 </td>
                 <td>{{ event.start_date }}</td>
                 <td>{{ event.event_type }}</td>
-                <td><a href="{% url 'person' event.organiser_id %}">{{ event.organiser }}</a></td>
+                
+                    {% if event.organiser_id %}
+                        <td><a href="{% url 'person' event.organiser_id %}">{{ event.organiser }}</a></td>
+                    {% else %}
+                        <td></td>{{ event.organiser }}</td>
+                    {% endif %}
+
                 <td>{{ event.location }}</td>
                 <td>{{ event.num_invited }}</td>
                 <td>{{ event.num_attended }}</td>

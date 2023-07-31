@@ -68,7 +68,7 @@ def edit_person(request,person_id):
     return render(request, "humanity/add_person.html", {"form": form})
 
 def events(request):
-    context = {'events':  Event.objects.all()}
+    context = {'events':  Event.objects.all().order_by('-updated_at')}
     return render(request, "humanity/events.html", context)
 
 def event(request,event_id):
