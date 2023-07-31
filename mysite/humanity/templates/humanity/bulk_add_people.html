@@ -2,6 +2,18 @@
 
 {% block content %}
 
+<p>
+    Accepted fields are:
+    <ol>
+        <li>first_name</li>
+        <li>last_name</li>
+        <li>email</li>
+        <li>phone_number</li>
+        <li>location</li>
+    </ol>
+    Records are uniquely identified by email. Any record without an email address will be ignored.
+</p>
+
 <form action="" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <label for="file1"> Upload a file</label>

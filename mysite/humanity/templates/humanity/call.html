@@ -1,0 +1,38 @@
+{% extends "humanity/base.html" %}
+
+{% block content %}
+<a href="{% url 'edit_call' call.id %}"><button>Edit</button></a>
+<table>
+        <tr>
+            <th>ID</th>
+            <td>{{ call.id }}</td>
+        </tr>                <tr>
+        <tr>
+            <th>Receiver</th>
+            <td><a href="{% url 'person' call.receiver_id %}">{{ call.receiver }}</a></td>
+        </tr>
+        <tr>
+            <th>Time</th>
+            <td>{{ call.call_time }}</td>
+        </tr>
+        <tr>
+            <th>Caller</th>
+            <td><a href="{% url 'person' call.caller_id %}">{{ call.caller }}</a></td>
+        </tr>
+        <tr>
+            <th>Reason</th>
+            <td>{{ call.reason }}</td>
+        </tr>
+        <tr>
+            <th>Outcome</th>
+            <td>{{ call.outcome }}</td>
+        </tr>
+    </table>
+
+<h4>Call Notes</h4>
+<div class = 'note'>
+    {{ call.notes }}
+</div>
+    
+
+{% endblock content %}

@@ -24,6 +24,8 @@ urlpatterns = [
 
     path("call", views.calls, name="calls"),
     path("call/add", views.add_call, name="add_call"),
+    path("call/<int:call_id>", views.call, name="call"),
+    path("call/<int:call_id>/edit", views.edit_call, name="edit_call"),
 
     path("seed", views.seed, name="seed"),
 ]

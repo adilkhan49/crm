@@ -46,9 +46,9 @@ class CallForm(forms.ModelForm):
     class Meta:
         model = Call
         fields = (
-            "caller",
             "receiver",
             "call_time",
+            "caller",
             "reason",
             "outcome",
             "notes",

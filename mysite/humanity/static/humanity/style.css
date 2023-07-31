@@ -6,7 +6,7 @@
     z-index: 1; /* Stay on top */
     top: 0; /* Stay at the top */
     left: 0;
-    background-color: #111; /* Black */
+    background-color: lightpink; 
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 20px;
   }
@@ -16,7 +16,7 @@
     padding: 6px 8px 6px 16px;
     text-decoration: none;
     font-size: 25px;
-    color: #818181;
+    color: black;
     display: block;
 }
   
@@ -50,12 +50,12 @@ th {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color: blue;
+  background-color: lightskyblue;
   color: white;
 }
 
 #myInput {
-  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
+  background-image: url('searchicon.png'); /* Add a search icon to input */
   background-position: 10px 12px; /* Position the search icon */
   background-repeat: no-repeat; /* Do not repeat the icon image */
   width: 100%; /* Full-width */
@@ -65,4 +65,17 @@ th {
   margin-bottom: 12px; /* Add some space below the input */
 }
 
-  
+.messages{
+  text-align: right;
+  border: #111;
+  align-self: flex-end;
+}
+
+.note{
+
+    width: 50%;
+    word-wrap: break-word;
+    border: 1px solid #ddd; /* Add a grey border */
+    padding-top: 12px;
+
+}

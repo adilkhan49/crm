@@ -3,16 +3,19 @@
 {% block content %}
     <a href="{% url 'add_call' %}"><button>Add Call</button></a> 
     <table>
-        <tr>    
+        <tr>  
+            <th>&nbsp;</th>  
             <th>Receiver</th>
             <th>Time</th>
             <th>Caller</th>
         </tr>        
         {% for call in calls %}
             <tr>
-                <td>{{ call.receiver }}</td>
+                <td><a href="{% url 'call' call.id %}"><button>Open</button></a></td>
+                <td><a href="{% url 'person' call.receiver_id %}">{{ call.receiver }}</a></td>
                 <td>{{ call.call_time }}</td>
-                <td>{{ call.caller }}</td>
+                <td><a href="{% url 'person' call.caller_id %}">{{ call.caller }}</a></td>
+
             </tr>
         {% endfor %}
     </table>

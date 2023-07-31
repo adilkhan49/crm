@@ -1,75 +1,41 @@
 from .models import Region, Person, EventType, EngagementRole, CallOutcome, CallReason
 from django.db import IntegrityError
 
-def seed_db():
+import pandas as pd
+import io
 
-    event_types = ['Mobilisation']
-    regions = ['Scotland','Wales','East of England',
-               'London','Midlands','North England','South East']
-    engagement_roles = ['Speaker','Attendee']
-    call_reasons = ['Sign up','Mobilise','Invite']
-    call_outcomes = ['Did Not Answer','Call Back','Answered']
-
-    people = [
-        {
-            'first_name': 'Adil',
-            'last_name': 'Khan',
-            'email': 'hexamadoodle@gmail.com',
-            'region': 'London',
-         },        {
-            'first_name': 'Jacky',
-            'last_name': 'Mashallah',
-            'email': 'jm@scottie.com',
-            'region': 'Scotland',
-         },
-        {
-            'first_name': 'Weslie',
-            'last_name': 'Norbit',
-            'email': 'rishidishi@zoo.com',
-            'region': 'Wales',
-         },
-        {
-            'first_name': 'McKinsie',
-            'last_name': 'Throwdown',
-            'email': 'benkings@barkingparish.com',
-            'region': 'London',
-         },
-    ]
-
-    for region in regions:
-        x,created = Region.objects.get_or_create(name=region)
-        if created:
-            x.save()
-
-    for i,person in enumerate(people):
-        try:
-            person['region'] = Region.objects.get(name=person['region'])
-            x,created = Person.objects.get_or_create(**person)
-            if created:
-                x.save()
-        except IntegrityError as e:
-             pass
-
-    for event_type in event_types:
-            x,created = EventType.objects.get_or_create(name=event_type)
-            if created:
-                x.save()
-
-    for role in engagement_roles:
-        x,created = EngagementRole.objects.get_or_create(name=role)
-        if created:
-            x.save()
-
-    for reason in call_reasons:
-        x,created = CallReason.objects.get_or_create(name=reason)
-        if created:
-            x.save()
-
-    for outcome in call_outcomes:
-        x,created = CallOutcome.objects.get_or_create(name=outcome)
-        if created:
-            x.save()
+def update_attrs(instance, **kwargs):
+    """ Updates model instance attributes and saves the instance
+    :param instance: any Model instance
+    :param kwargs: dict with attributes
+    :return: updated instance, reloaded from database
+    """
+    instance_pk = instance.pk
+    for key, value in kwargs.items():
+        if hasattr(instance, key):
+            setattr(instance, key, value)
+        else:
+            raise KeyError("Failed to update non existing attribute {}.{}".format(
+                instance.__class__.__name__, key
+            ))
+    instance.save(force_update=True)
+    return instance.__class__.objects.get(pk=instance_pk)
 
     
-
-    
+def upsert_people(file_obj):
+    df = pd.read_csv(io.StringIO(file_obj.read().decode('utf-8')), delimiter=',')
+    df = df[df['email'].notna()]
+    created,updated = 0,0
+    for i,person in df.iterrows():
+        person = person.dropna()
+        p = Person.objects.filter(email=person['email']).first()
+        if p:
+            update_attrs(p,**person)
+            print(f'Updated {p.email}')
+            created += 1
+        else:
+            p,is_created = Person.objects.get_or_create(**person)
+            p.save()
+            print(f'Added {p.email}')
+            updated += 1
+    return {"created": created, "updated": updated }

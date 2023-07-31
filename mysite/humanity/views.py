@@ -3,14 +3,16 @@ from django.http import HttpResponse
 from django.contrib import messages
 
 from .models import Person, Event, Engagement, EngagementRole, Call
-from .services import seed_db
+from .seed import seed_db
+from .services import upsert_people,update_attrs
 from .forms import PersonForm, EventForm, AttendanceForm, CallForm, EngagementFormInvite, EngagementFormConfirmed, EngagementFormAttended
 
 
 def index(request):
     context = {
         'num_people': Person.objects.count(),
-        'num_events': Event.objects.count()
+        'num_events': Event.objects.count(),
+        'num_contacted': Call.objects.values_list('receiver').distinct().count()
     }
     return render(request, "humanity/index.html", context)
 
@@ -26,24 +28,6 @@ def seed(request):
     seed_db()
     return HttpResponse("Ingested Seed Data")
 
-def update_attrs(instance, **kwargs):
-    """ Updates model instance attributes and saves the instance
-    :param instance: any Model instance
-    :param kwargs: dict with attributes
-    :return: updated instance, reloaded from database
-    """
-    instance_pk = instance.pk
-    for key, value in kwargs.items():
-        if hasattr(instance, key):
-            setattr(instance, key, value)
-        else:
-            raise KeyError("Failed to update non existing attribute {}.{}".format(
-                instance.__class__.__name__, key
-            ))
-    instance.save(force_update=True)
-    return instance.__class__.objects.get(pk=instance_pk)
-
-
 def add_person(request):
     if request.method == "POST":
         form = PersonForm(request.POST)
@@ -57,10 +41,12 @@ def add_person(request):
 
 def bulk_add_people(request):
     if request.method == "POST":
-        csv_file = request.FILES['file']
-        if not csv_file.name.endswith('.csv'):
+        file_obj = request.FILES['file']
+        if not file_obj.name.endswith('.csv'):
             messages.error(request, 'THIS IS NOT A CSV FILE')
-
+        res = upsert_people(file_obj)
+        messages.success(request, res)
+        return render(request, "humanity/bulk_load_success.html")
     return render(request, "humanity/bulk_add_people.html")
 
 def delete_person(request,person_id):
@@ -140,11 +126,11 @@ def add_attendee(request,event_id):
 
 def event_attendees(request,event_id):
     context = {
-        'event': get_object_or_404(Event,pk=event_id),}
+        'event': get_object_or_404(Event,pk=event_id)}
     return render(request, "humanity/event_attendees.html", context)
 
 def calls(request):
-    context = {'calls':  Call.objects.all().order_by('-call_time')}
+    context = {'calls':  Call.objects.all().order_by('-updated_at')}
     return render(request, "humanity/calls.html", context)
 
 
@@ -195,3 +181,18 @@ def call_person(request,person_id):
         form = CallForm(initial={'receiver':person_id})
     return render(request, "humanity/add_call.html", {"form": form})
 
+def call(request,call_id):
+    context = {'call':  get_object_or_404(Call,pk=call_id)}
+    return render(request, "humanity/call.html", context)
+
+def edit_call(request,call_id):
+    c = get_object_or_404(Call,pk=call_id)
+    form = CallForm(instance=c)
+    if request.method == "POST":    
+        form = CallForm(request.POST,instance=c)
+        if form.is_valid():
+            update_attrs(c,**form.cleaned_data)
+            return HttpResponseRedirect(reverse('calls'))
+    else:
+        form = CallForm(instance=c)
+    return render(request, "humanity/add_call.html", {"form": form})

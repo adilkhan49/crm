@@ -15,14 +15,19 @@
             <th>&nbsp;</th>
             <th>Name</th>
             <th>Email</th>
-            <th>Region</th>
+            <th>Phone</th>
+            <th>Location</th>
         </tr>        
         {% for person in people %}
             <tr>
-                <td><a href="{% url 'person' person.id %}"><button>Open</button></a></td>
-                <td>{{ person.first_name }} {{ person.last_name }}</td>
+                <td>
+                  <a href="{% url 'call_person' person.id %}"><button>Call</button></a>
+                  <a href="{% url 'edit_person' person.id %}"><button>Edit</button></a>
+                </td>
+                <td><a href="{% url 'person' person.id %}">{{ person }}</a></td>
                 <td>{{ person.email }}</td>
-                <td>{{ person.region }}</td>
+                <td>{{ person.phone_number }}</td>
+                <td>{{ person.location }}</td>
             </tr>
         {% endfor %}
     </table>
