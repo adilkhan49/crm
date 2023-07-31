@@ -16,7 +16,6 @@
         {% for a in event.invited %}
             <tr>
                 <td>
-                    <a href="{% url 'person' a.person.id %}"><button>Open</button></a>
                     <a href="{% url 'call_person' a.person.id %}"><button>Call</button></a>
                     <a href="{% url 'delete_event_attendee' a.event_id a.id %}"><button>Delete</button></a>
                 </td>
