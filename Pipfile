@@ -6,7 +6,6 @@ name = "pypi"
 [packages]
 django = "*"
 pymysql = "*"
-django-bootstrap-sidebar = "*"
 pandas = "*"
 
 [dev-packages]

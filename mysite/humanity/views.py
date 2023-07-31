@@ -2,6 +2,8 @@ from django.shortcuts import render,get_object_or_404, HttpResponseRedirect,reve
 from django.http import HttpResponse
 from django.contrib import messages
 from django.utils.timezone import localtime
+from django.contrib.auth.decorators import login_required
+
 
 from .models import Person, Event, Engagement, EngagementRole, Call
 from .seed import seed_db
@@ -9,6 +11,7 @@ from .services import upsert_people,update_attrs
 from .forms import PersonForm, EventForm, AttendanceForm, CallForm, EngagementFormInvite, EngagementFormConfirmed, EngagementFormAttended
 
 
+@login_required
 def index(request):
     context = {
         'num_people': Person.objects.count(),
@@ -17,10 +20,12 @@ def index(request):
     }
     return render(request, "humanity/index.html", context)
 
+@login_required
 def people(request):
     context = {'people':  Person.objects.all().order_by('-updated_at')}
     return render(request, "humanity/people.html", context)
 
+@login_required
 def person(request,person_id):
     context = {'person':  get_object_or_404(Person,pk=person_id)}
     return render(request, "humanity/person.html", context)
@@ -29,6 +34,7 @@ def seed(request):
     seed_db()
     return HttpResponse("Ingested Seed Data")
 
+@login_required
 def add_person(request):
     if request.method == "POST":
         form = PersonForm(request.POST)
@@ -40,6 +46,7 @@ def add_person(request):
         form = PersonForm()
     return render(request, "humanity/add_person.html", {"form": form})
 
+@login_required
 def bulk_add_people(request):
     if request.method == "POST":
         file_obj = request.FILES['file']
@@ -50,11 +57,13 @@ def bulk_add_people(request):
         return render(request, "humanity/bulk_load_success.html")
     return render(request, "humanity/bulk_add_people.html")
 
+@login_required
 def delete_person(request,person_id):
     p = get_object_or_404(Person,pk=person_id)
     p.delete()
     return HttpResponseRedirect(reverse('people'))
 
+@login_required
 def edit_person(request,person_id):
     p = get_object_or_404(Person,pk=person_id)
     form = PersonForm(instance=p)
@@ -68,14 +77,17 @@ def edit_person(request,person_id):
         form = PersonForm(instance=p)
     return render(request, "humanity/add_person.html", {"form": form})
 
+@login_required
 def events(request):
     context = {'events':  Event.objects.all().order_by('-updated_at')}
     return render(request, "humanity/events.html", context)
 
+@login_required
 def event(request,event_id):
     context = {'event':  get_object_or_404(Event,pk=event_id)}
     return render(request, "humanity/event.html", context)
 
+@login_required
 def add_event(request):
     if request.method == "POST":
         form = EventForm(request.POST)
@@ -90,6 +102,7 @@ def add_event(request):
     return render(request, "humanity/add_event.html", {"form": form})
 
 
+@login_required
 def edit_event(request,event_id):
     e = get_object_or_404(Event,pk=event_id)
     form = EventForm(instance=e)
@@ -102,6 +115,14 @@ def edit_event(request,event_id):
         form = EventForm(instance=e)
     return render(request, "humanity/add_person.html", {"form": form})
 
+
+@login_required
+def delete_event(request,event_id):
+    e = get_object_or_404(Event,pk=event_id)
+    e.delete()
+    return HttpResponseRedirect(reverse('events'))
+
+@login_required
 def add_attendee(request,event_id):
     if request.method == "POST":
         e = get_object_or_404(Event,pk=event_id)
@@ -130,11 +151,12 @@ def event_attendees(request,event_id):
         'event': get_object_or_404(Event,pk=event_id)}
     return render(request, "humanity/event_attendees.html", context)
 
+@login_required
 def calls(request):
     context = {'calls':  Call.objects.all().order_by('-updated_at')}
     return render(request, "humanity/calls.html", context)
 
-
+@login_required
 def add_call(request):
     if request.method == "POST":
         form = CallForm(request.POST)
@@ -148,6 +170,7 @@ def add_call(request):
         form = CallForm(initial={'call_time':localtime()})
     return render(request, "humanity/add_call.html", {"form": form})
 
+@login_required
 def edit_event_attendee(request,event_id,engagement_id):
     if request.method == "POST":
         print(request.POST)
@@ -166,11 +189,13 @@ def edit_event_attendee(request,event_id,engagement_id):
     return HttpResponse(200)
 
 
+@login_required
 def delete_event_attendee(request,event_id,engagement_id):
     e = get_object_or_404(Engagement,pk=engagement_id)
     e.delete()
     return HttpResponseRedirect(reverse('event_attendees',kwargs={"event_id": event_id}))
 
+@login_required
 def call_person(request,person_id):
     if request.method == "POST":
         form = CallForm(request.POST)
@@ -183,10 +208,12 @@ def call_person(request,person_id):
         form = CallForm(initial={'receiver':person_id,'call_time': localtime()})
     return render(request, "humanity/add_call.html", {"form": form})
 
+@login_required
 def call(request,call_id):
     context = {'call':  get_object_or_404(Call,pk=call_id)}
     return render(request, "humanity/call.html", context)
 
+@login_required
 def edit_call(request,call_id):
     c = get_object_or_404(Call,pk=call_id)
     form = CallForm(instance=c)
