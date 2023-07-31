@@ -4,6 +4,7 @@
 <html>
     <head>
         <link rel="stylesheet" href="{% static 'humanity/style.css' %}">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <title>Humanity Project</title>
     </head>
     <div class="sidenav">
@@ -17,5 +18,14 @@
            <input type=button value="Back" onClick="javascript:history.go(-1);">
         </div>
         {% block content %}{% endblock content %}
+
+        {% if messages %} 
+        <div class="messages">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %} 
+        </div>
+        {% endif %} 
     </div>  
+    
 </html>

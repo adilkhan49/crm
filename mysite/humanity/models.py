@@ -71,7 +71,8 @@ class Event(models.Model):
             .select_related('person')\
             .filter(
                 event_id = self.id,
-                engagement_role__name='Attendee')
+                engagement_role__name='Attendee')\
+            .order_by('-created_at')
     
     @property
     def num_invited(self):
@@ -95,6 +96,8 @@ class Engagement(models.Model):
     invited = models.BooleanField(null=True,blank=True,default=True)
     confirmed = models.BooleanField(null=True,blank=True)
     attended = models.BooleanField(null=True,blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     class Meta:
         unique_together = (('event', 'person'))
 
@@ -115,7 +118,8 @@ class Call(models.Model):
     outcome = models.ForeignKey(CallOutcome,on_delete=models.CASCADE,null=True,blank=True)
     call_time = models.DateTimeField()
     notes = models.CharField(max_length=255,null=True,blank=True)
-
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 class Interest(models.Model):
     name = models.CharField(max_length=255,unique=True)

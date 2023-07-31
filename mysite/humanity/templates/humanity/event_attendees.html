@@ -7,10 +7,7 @@
     <table>
         <tr>    
             <th>&nbsp;</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Region</th>
+            <th>Name</th>
             <th>Invited</th>
             <th>Confirmed</th>
             <th>Attended</th>
@@ -23,10 +20,7 @@
                     <a href="{% url 'call_person' a.person.id %}"><button>Call</button></a>
                     <a href="{% url 'delete_event_attendee' a.event_id a.id %}"><button>Delete</button></a>
                 </td>
-                <td>{{ a.person.first_name }}</td>
-                <td>{{ a.person.last_name }}</td>
-                <td>{{ a.person.email }}</td>
-                <td>{{ a.person.region }}</td>
+                <td><a href="{% url 'person' a.person_id %}">{{ a.person }}</a></td>
                 <td>
                     <form action = "{% url 'edit_event_attendee' a.event_id a.id %}" method="post">{% csrf_token %}
                         <input name = 'invited' type="hidden" value = false onchange="this.form.submit()" {% if a.invited %} checked{% endif %}>
