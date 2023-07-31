@@ -32,10 +32,10 @@ def upsert_people(file_obj):
         if p:
             update_attrs(p,**person)
             print(f'Updated {p.email}')
-            created += 1
+            updated += 1
         else:
             p,is_created = Person.objects.get_or_create(**person)
             p.save()
             print(f'Added {p.email}')
-            updated += 1
+            created += 1
     return {"created": created, "updated": updated }
