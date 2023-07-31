@@ -1,6 +1,7 @@
 from django.shortcuts import render,get_object_or_404, HttpResponseRedirect,reverse
 from django.http import HttpResponse
 from django.contrib import messages
+from django.utils.timezone import localtime
 
 from .models import Person, Event, Engagement, EngagementRole, Call
 from .seed import seed_db
@@ -143,7 +144,8 @@ def add_call(request):
             print('redirect')
             return HttpResponseRedirect(reverse('calls'))
     else:
-        form = CallForm()
+        
+        form = CallForm(initial={'call_time':localtime()})
     return render(request, "humanity/add_call.html", {"form": form})
 
 def edit_event_attendee(request,event_id,engagement_id):
